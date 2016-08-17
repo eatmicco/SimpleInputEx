@@ -79,7 +79,6 @@
     <Compile Include="Assets\Script\Serializer\JsonSerializableAttribute.cs" />
     <Compile Include="Assets\Script\Serializer\JsonSerializer.cs" />
     <Compile Include="Assets\Script\Serializer\SimpleJSON.cs" />
-    <Compile Include="Assets\Script\StaticComponent.cs" />
     <Compile Include="Assets\Script\Testing\TranslateByInputTest.cs" />
   </ItemGroup>
   <ItemGroup>

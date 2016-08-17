@@ -1,13 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
-MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleInputEx.CSharp.Plugins", "SimpleInputEx.CSharp.Plugins.csproj", "{559B74DC-B0CA-7774-C862-C1A980D89DED}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleInputEx.CSharp", "SimpleInputEx.CSharp.csproj", "{3DC4BA4F-A685-FDB2-2E00-AD31A2CE0F92}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleInputEx.CSharp.Editor", "SimpleInputEx.CSharp.Editor.csproj", "{C43A8A78-07A8-1533-2D26-C207C338563C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleInputEx.Test", "..\SimpleInputEx.Test\SimpleInputEx.Test.csproj", "{B99E79A9-9477-4EF9-A55F-1754E63E8641}"
 EndProject
@@ -25,10 +21,6 @@ Global
 		{3DC4BA4F-A685-FDB2-2E00-AD31A2CE0F92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DC4BA4F-A685-FDB2-2E00-AD31A2CE0F92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DC4BA4F-A685-FDB2-2E00-AD31A2CE0F92}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C43A8A78-07A8-1533-2D26-C207C338563C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C43A8A78-07A8-1533-2D26-C207C338563C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C43A8A78-07A8-1533-2D26-C207C338563C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C43A8A78-07A8-1533-2D26-C207C338563C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B99E79A9-9477-4EF9-A55F-1754E63E8641}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B99E79A9-9477-4EF9-A55F-1754E63E8641}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B99E79A9-9477-4EF9-A55F-1754E63E8641}.Release|Any CPU.ActiveCfg = Release|Any CPU
