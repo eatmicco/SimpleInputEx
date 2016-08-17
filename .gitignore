@@ -1,0 +1,24 @@
+packages/
+bin/
+bin.meta
+obj/
+obj.meta
+*.suo
+*.user
+*.mdf
+*.mdl
+
+# OS junk files
+[Tt]humbs.db
+[Tt]humbs.db.meta
+*.DS_Store
+
+# User-specific files
+*.csproj.user
+AutomatedTest.xml
+AutomatedTest.log
+testReplay.log
+
+# Unity-generated files
+Library/
+TestResults/
