@@ -22,3 +22,4 @@ testReplay.log
 # Unity-generated files
 Library/
 TestResults/
+Temp/
