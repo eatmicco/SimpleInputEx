@@ -8,13 +8,12 @@ public class TranslateByInputTest : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+		InputEx.Replay(InputReplay);
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		InputEx.Replay(InputReplay);
-
 		if (InputEx.GetKeyDown(KeyCode.LeftArrow))
 		{
 			transform.Translate(-0.01f, 0, 0);
@@ -24,12 +23,17 @@ public class TranslateByInputTest : MonoBehaviour
 		{
 			transform.Translate(0.01f, 0, 0);
 		}
+	}
 
-		InputEx.Update();
+	void LateUpdate()
+	{
+		InputEx.LateUpdate();
 	}
 
 	void OnDestroy()
 	{
 		Debug.Log("OnDestroy");
+
+		InputEx.Save();
 	}
 }

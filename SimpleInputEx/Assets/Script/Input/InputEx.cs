@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.IO;
+using Simple.Serializer;
 
 namespace Simple.InputEx
 {
@@ -8,12 +10,21 @@ namespace Simple.InputEx
 		private static bool _isReplay;
 		private static bool _isHold;
 		private static int _replayIndex;
-		private static readonly List<InputState> _inputStates = new List<InputState>();
+
+		private static InputDataList _inputData = new InputDataList()
+		{
+			List = new List<InputState>()
+		};
 
 		public static void Replay(bool replay)
 		{
 			_isReplay = replay;
 			_replayIndex = 0;
+
+			if (_isReplay)
+			{
+				Load();
+			}
 		}
 
 		public static bool GetKeyDown(KeyCode keyCode)
@@ -27,14 +38,18 @@ namespace Simple.InputEx
 			{
 				if (Input.GetKeyDown(keyCode))
 				{
-					var lastInputState = _inputStates[_inputStates.Count - 1];
-					var notOkToSave = lastInputState.Type == InputType.Keyboard &&
-					                 lastInputState.KeyCode == (int)keyCode &&
-					                 lastInputState.CurrentState == ButtonState.Down;
+					var notOkToSave = false;
+					if (_inputData.List.Count > 0)
+					{
+						var lastInputState = _inputData.List[_inputData.List.Count - 1];
+						notOkToSave = lastInputState.Type == InputType.Keyboard &&
+										 lastInputState.KeyCode == (int)keyCode &&
+										 lastInputState.CurrentState == ButtonState.Down;						
+					}
 					if (!notOkToSave)
 					{
 						// Save the state
-						_inputStates.Add(new InputState
+						_inputData.List.Add(new InputState
 						{
 							Type = InputType.Keyboard,
 							KeyCode = (int)keyCode,
@@ -49,18 +64,32 @@ namespace Simple.InputEx
 			}
 			else
 			{
-				var currentInputState = _inputStates[_replayIndex];
-				var isKeyDown = currentInputState.Type == InputType.Keyboard &&
-									 currentInputState.KeyCode == (int)keyCode &&
-									 currentInputState.CurrentState == ButtonState.Down;
-				if (isKeyDown)
+				if (_inputData.List.Count > 0 && _replayIndex < _inputData.List.Count)
 				{
-					return true;
+					var keyIsUp = true;
+					if (_replayIndex > 1)
+					{
+						var lastInputState = _inputData.List[_replayIndex - 1];
+						if (lastInputState.CurrentState != ButtonState.Up)
+						{
+							keyIsUp = false;
+						}
+					}
+					var currentInputState = _inputData.List[_replayIndex];
+					var isKeyDown = currentInputState.Type == InputType.Keyboard &&
+					                currentInputState.KeyCode == (int) keyCode &&
+					                currentInputState.SavedState == ButtonState.Down;
+					if (isKeyDown && keyIsUp)
+					{
+						_replayIndex++;
+						return true;
+					}
 				}
 				return false;
 			}
 		}
 
+		// We won't be able to replay KeyUp if there's no KeyDown, so for now we disregard any KeyUp recording
 		public static bool GetKeyUp(KeyCode keyCode)
 		{
 			if (_isHold)
@@ -68,42 +97,7 @@ namespace Simple.InputEx
 				return false;
 			}
 
-			if (!_isReplay)
-			{
-				if (Input.GetKeyUp(keyCode))
-				{
-					var lastInputState = _inputStates[_inputStates.Count - 1];
-					var notOkToSave = lastInputState.Type == InputType.Keyboard &&
-					                  lastInputState.KeyCode == (int)keyCode &&
-					                  lastInputState.CurrentState == ButtonState.Up;
-					if (!notOkToSave)
-					{
-						// Save the state
-						_inputStates.Add(new InputState
-						{
-							Type = InputType.Keyboard,
-							KeyCode = (int)keyCode,
-							SavedState = ButtonState.Down,
-							CurrentState = ButtonState.Down
-						});
-					}
-					return true;
-				}
-			}
-			else
-			{
-				var currentInputState = _inputStates[_replayIndex];
-				var isKeyUp = currentInputState.Type == InputType.Keyboard &&
-									 currentInputState.KeyCode == (int)keyCode &&
-									 currentInputState.CurrentState == ButtonState.Up;
-				if (isKeyUp)
-				{
-					return true;
-				}
-				return false;
-			}
-
-			return false;
+			return Input.GetKeyUp(keyCode);
 		}
 
 		public static bool GetMouseButtonDown(int button)
@@ -126,15 +120,10 @@ namespace Simple.InputEx
 		}
 
 		// Put the Update method in the end of Update in MonoBehaviour
-		public static void Update()
+		public static void LateUpdate()
 		{
-			if (_isReplay)
-			{
-				_replayIndex++;
-			}
-
 			// Reset all current state
-			foreach (var inputState in _inputStates)
+			foreach (var inputState in _inputData.List)
 			{
 				inputState.CurrentState = ButtonState.Up;
 			}
@@ -152,7 +141,35 @@ namespace Simple.InputEx
 
 		public static void Save()
 		{
-			
+			if (!_isReplay)
+			{
+				var json = JsonSerializer.Serialize(_inputData);
+
+				var path = Application.dataPath + "/Data/inputdata.json";
+				// Delete the file if exists
+				if (File.Exists(path))
+				{
+					File.Delete(path);
+				}
+
+				using (var fileStream = File.OpenWrite(path))
+				{
+					var streamWriter = new StreamWriter(fileStream);
+					streamWriter.Write(json.ToJSON(0));
+
+					streamWriter.Flush();
+					streamWriter.Close();
+				}
+			}
+		}
+
+		public static void Load()
+		{
+			using (var streamReader = File.OpenText(Application.dataPath + "/Data/inputdata.json"))
+			{
+				var jsonString = streamReader.ReadToEnd();
+				_inputData = JsonSerializer.Deserialize(typeof (InputDataList), jsonString) as InputDataList;
+			}
 		}
 	}
 }
