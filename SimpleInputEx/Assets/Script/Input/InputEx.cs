@@ -16,6 +16,20 @@ namespace Simple.InputEx
 			List = new List<InputState>()
 		};
 
+		private static Vector3 _currentMousePosition = Vector3.zero;
+
+		public static Vector3 GetMousePosition()
+		{
+			if (_isReplay)
+			{
+				return _currentMousePosition;
+			}
+			else
+			{
+				return Input.mousePosition;
+			}
+		}
+
 		public static void Replay(bool replay)
 		{
 			_isReplay = replay;
@@ -66,20 +80,20 @@ namespace Simple.InputEx
 			{
 				if (_inputData.List.Count > 0 && _replayIndex < _inputData.List.Count)
 				{
-					var keyIsUp = true;
+					var stateIsUp = true;
 					if (_replayIndex > 1)
 					{
 						var lastInputState = _inputData.List[_replayIndex - 1];
 						if (lastInputState.CurrentState != ButtonState.Up)
 						{
-							keyIsUp = false;
+							stateIsUp = false;
 						}
 					}
 					var currentInputState = _inputData.List[_replayIndex];
 					var isKeyDown = currentInputState.Type == InputType.Keyboard &&
 					                currentInputState.KeyCode == (int) keyCode &&
 					                currentInputState.SavedState == ButtonState.Down;
-					if (isKeyDown && keyIsUp)
+					if (isKeyDown && stateIsUp)
 					{
 						_replayIndex++;
 						return true;
@@ -109,10 +123,55 @@ namespace Simple.InputEx
 
 			if (!_isReplay)
 			{
-
+				if (Input.GetMouseButtonDown(button))
+				{
+					var notOkToSave = false;
+					if (_inputData.List.Count > 0)
+					{
+						var lastInputState = _inputData.List[_inputData.List.Count - 1];
+						notOkToSave = lastInputState.Type == InputType.Mouse &&
+									lastInputState.MouseButton == button &&
+									lastInputState.CurrentState == ButtonState.Down;
+					}
+					if (!notOkToSave)
+					{
+						// Save the state
+						_inputData.List.Add(new InputState
+						{
+							Type = InputType.Mouse,
+							MouseButton = button,
+							MousePosition = new Point3(Input.mousePosition),
+							SavedState = ButtonState.Down,
+							CurrentState = ButtonState.Down
+						});
+					}
+					return true;
+				}
 			}
 			else
 			{
+				if (_inputData.List.Count > 0 && _replayIndex < _inputData.List.Count)
+				{
+					var stateIsUp = true;
+					if (_replayIndex > 1)
+					{
+						var lastInputState = _inputData.List[_replayIndex - 1];
+						if (lastInputState.CurrentState != ButtonState.Up)
+						{
+							stateIsUp = false;
+						}
+					}
+					var currentInputState = _inputData.List[_replayIndex];
+					var isMouseDown = currentInputState.Type == InputType.Mouse &&
+									currentInputState.MouseButton == button &&
+									currentInputState.SavedState == ButtonState.Down;
+					if (isMouseDown && stateIsUp)
+					{
+						_currentMousePosition = currentInputState.MousePosition.ToVector3();
+						_replayIndex++;
+						return true;
+					}
+				}
 				return false;
 			}
 

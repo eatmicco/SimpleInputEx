@@ -1,9 +1,11 @@
 ﻿using Simple.InputEx;
 using UnityEngine;
+using UnityEngine.Networking.Match;
 
 public class TranslateByInputTest : MonoBehaviour
 {
 	public bool InputReplay = false;
+	public Collider Collider;
 
 	// Use this for initialization
 	void Start () 
@@ -22,6 +24,20 @@ public class TranslateByInputTest : MonoBehaviour
 		if (InputEx.GetKeyDown(KeyCode.RightArrow))
 		{
 			transform.Translate(0.01f, 0, 0);
+		}
+
+		if (InputEx.GetMouseButtonDown(0))
+		{
+			var mousePos = InputEx.GetMousePosition();
+			if (Collider != null)
+			{
+				Ray ray = Camera.main.ScreenPointToRay(mousePos);
+				RaycastHit hit;
+				if (Collider.Raycast(ray, out hit, 1000))
+				{
+					Debug.Log("MouseClicked in Sphere");
+				}
+			}
 		}
 	}
 

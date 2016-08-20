@@ -1,4 +1,5 @@
 ﻿using Simple.Serializer;
+using UnityEngine;
 
 namespace Simple.InputEx
 {
@@ -26,6 +27,18 @@ namespace Simple.InputEx
 			X = x;
 			Y = y;
 			Z = z;
+		}
+
+		public Point3(Vector3 vector3)
+		{
+			X = vector3.x;
+			Y = vector3.y;
+			Z = vector3.z;
+		}
+
+		public Vector3 ToVector3()
+		{
+			return new Vector3(X, Y, Z);
 		}
 	}
 }
