@@ -26,6 +26,7 @@ namespace Simple.Test.IntegrationTest
 					new InputState()
 					{
 						Type = InputType.Mouse,
+						MouseButton = 0,
 						MousePosition = new Point3(10, 10, 10),
 						SavedState = ButtonState.Down,
 						CurrentState = ButtonState.Down
@@ -40,7 +41,7 @@ namespace Simple.Test.IntegrationTest
 				}
 			};
 
-			var expectedJson = "{ \n  \"InputDataList\": { \n    \"List\": [ \n      { \n        \"Type\": \"Keyboard\", \n        \"SavedState\": \"Down\", \n        \"CurrentState\": \"Down\", \n        \"KeyCode\": 32\n        }, \n      { \n        \"Type\": \"Mouse\", \n        \"SavedState\": \"Down\", \n        \"CurrentState\": \"Down\", \n        \"KeyCode\": 0, \n        \"MousePosition\": { \n          \"X\": 10, \n          \"Y\": 10, \n          \"Z\": 10\n          }\n        }, \n      { \n        \"Type\": \"Keyboard\", \n        \"SavedState\": \"Down\", \n        \"CurrentState\": \"Down\", \n        \"KeyCode\": 10\n        }\n      ]\n    }\n  }";
+			var expectedJson = "{ \n  \"InputDataList\": { \n    \"List\": [ \n      { \n        \"Type\": \"Keyboard\", \n        \"SavedState\": \"Down\", \n        \"CurrentState\": \"Down\", \n        \"KeyCode\": 32, \n        \"MouseButton\": 0\n        }, \n      { \n        \"Type\": \"Mouse\", \n        \"SavedState\": \"Down\", \n        \"CurrentState\": \"Down\", \n        \"KeyCode\": 0, \n        \"MouseButton\": 0, \n        \"MousePosition\": { \n          \"X\": 10, \n          \"Y\": 10, \n          \"Z\": 10\n          }\n        }, \n      { \n        \"Type\": \"Keyboard\", \n        \"SavedState\": \"Down\", \n        \"CurrentState\": \"Down\", \n        \"KeyCode\": 10, \n        \"MouseButton\": 0\n        }\n      ]\n    }\n  }";
 
 			var node = JsonSerializer.Serialize(inputData);
 
@@ -52,7 +53,7 @@ namespace Simple.Test.IntegrationTest
 		[TestMethod]
 		public void Load_InputData()
 		{
-			var jsonString = "{ \n  \"InputDataList\": { \n    \"List\": [ \n      { \n        \"Type\": \"Keyboard\", \n        \"SavedState\": \"Down\", \n        \"CurrentState\": \"Down\", \n        \"KeyCode\": 32\n        }, \n      { \n        \"Type\": \"Mouse\", \n        \"SavedState\": \"Down\", \n        \"CurrentState\": \"Down\", \n        \"KeyCode\": 0, \n        \"MousePosition\": { \n          \"X\": 10, \n          \"Y\": 10, \n          \"Z\": 10\n          }\n        }, \n      { \n        \"Type\": \"Keyboard\", \n        \"SavedState\": \"Down\", \n        \"CurrentState\": \"Down\", \n        \"KeyCode\": 10\n        }\n      ]\n    }\n  }";
+			var jsonString = "{ \n  \"InputDataList\": { \n    \"List\": [ \n      { \n        \"Type\": \"Keyboard\", \n        \"SavedState\": \"Down\", \n        \"CurrentState\": \"Down\", \n        \"KeyCode\": 32, \n        \"MouseButton\": 0\n        }, \n      { \n        \"Type\": \"Mouse\", \n        \"SavedState\": \"Down\", \n        \"CurrentState\": \"Down\", \n        \"KeyCode\": 0, \n        \"MouseButton\": 0, \n        \"MousePosition\": { \n          \"X\": 10, \n          \"Y\": 10, \n          \"Z\": 10\n          }\n        }, \n      { \n        \"Type\": \"Keyboard\", \n        \"SavedState\": \"Down\", \n        \"CurrentState\": \"Down\", \n        \"KeyCode\": 10, \n        \"MouseButton\": 0\n        }\n      ]\n    }\n  }";
 
 			var inputData = JsonSerializer.Deserialize(typeof(InputDataList), jsonString) as InputDataList;
 

@@ -21,6 +21,9 @@ namespace Simple.InputEx
 		[JsonNode("KeyCode")]
 		public int KeyCode { get; set; }
 
+		[JsonNode("MouseButton")]
+		public int MouseButton { get; set; }
+
 		[JsonNode("MousePosition")]
 		public Point3 MousePosition { get; set; }
 	}
